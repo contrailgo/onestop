@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One Stop Rental System - HUFS</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f6f9;
+    }
+
+    .page {
+      width: 900px;
+      min-height: 580px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    }
+
+    .left-panel {
+      background: #002d6e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 40px;
+      gap: 28px;
+    }
+
+    .logo-icon {
+      width: 64px; height: 64px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .logo-icon i { font-size: 32px; color: #fff; }
+    .logo-title { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.3px; text-align: center; }
+    .logo-sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 6px; letter-spacing: 0.5px; text-align: center; }
+
+    .divider { width: 40px; height: 1px; background: rgba(255,255,255,0.2); }
+
+    .info-section { width: 100%; }
+    .info-title { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.45); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+
+    .contact-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 8px; margin-bottom: 6px;
+      text-decoration: none; transition: background 0.15s;
+    }
+    .contact-item:hover { background: rgba(255,255,255,0.14); }
+    .contact-item i { font-size: 15px; color: rgba(255,255,255,0.55); flex-shrink: 0; }
+    .contact-label { font-size: 11px; color: rgba(255,255,255,0.5); flex: 1; }
+    .contact-number { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); }
+
+    .provider-tag { font-size: 10px; color: rgba(255,255,255,0.3); text-align: center; letter-spacing: 0.3px; }
+
+    .right-panel {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 48px 40px; background: #fff;
+    }
+
+    .form-wrap { width: 100%; max-width: 320px; }
+    .form-heading { font-size: 20px; font-weight: 700; color: #111; margin-bottom: 4px; }
+    .form-sub { font-size: 13px; color: #888; margin-bottom: 24px; }
+
+    .input-group { margin-bottom: 14px; }
+    .input-group label { display: block; font-size: 12px; font-weight: 600; color: #555; margin-bottom: 6px; }
+    .input-group input {
+      width: 100%; height: 42px;
+      border: 1px solid #dde1e8; border-radius: 8px;
+      padding: 0 14px; font-size: 14px; color: #111;
+      background: #f9fafb; outline: none;
+      transition: border 0.15s, background 0.15s, box-shadow 0.15s;
+    }
+    .input-group input:focus {
+      border-color: #002d6e; background: #fff;
+      box-shadow: 0 0 0 3px rgba(0,45,110,0.08);
+    }
+    .input-group input:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .privacy-box {
+      background: #f4f6f9; border-radius: 8px;
+      padding: 14px 16px; margin-bottom: 14px;
+      font-size: 11.5px; color: #666; line-height: 1.7;
+    }
+    .privacy-box p { margin-bottom: 4px; }
+    .privacy-box p:last-child { margin-bottom: 0; }
+
+    .agree-row { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+    .agree-row input[type=checkbox] { width: 16px; height: 16px; accent-color: #002d6e; cursor: pointer; flex-shrink: 0; }
+    .agree-row label { font-size: 13px; color: #333; cursor: pointer; font-weight: 500; }
+
+    .btn-login {
+      width: 100%; height: 44px;
+      background: #002d6e; color: #fff;
+      font-size: 14px; font-weight: 700;
+      border: none; border-radius: 8px; cursor: pointer;
+      letter-spacing: 0.3px; transition: background 0.15s, transform 0.1s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-login:hover:not(:disabled) { background: #003b91; }
+    .btn-login:active:not(:disabled) { transform: scale(0.98); }
+    .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-msg {
+      display: none;
+      background: #fff0f0; border: 1px solid #fca5a5;
+      border-radius: 8px; padding: 10px 14px;
+      font-size: 12.5px; color: #b91c1c;
+      margin-bottom: 14px;
+      align-items: center; gap: 8px;
+    }
+    .error-msg i { font-size: 15px; flex-shrink: 0; }
+
+    .success-msg {
+      display: none;
+      background: #f0fdf4; border: 1px solid #86efac;
+      border-radius: 8px; padding: 10px 14px;
+      font-size: 12.5px; color: #166534;
+      margin-bottom: 14px;
+      align-items: center; gap: 8px;
+    }
+    .success-msg i { font-size: 15px; flex-shrink: 0; }
+
+    .find-links { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 16px; }
+    .find-links a { font-size: 12px; color: #888; text-decoration: none; transition: color 0.15s; }
+    .find-links a:hover { color: #002d6e; }
+    .find-sep { width: 1px; height: 12px; background: #ddd; }
+
+    @media (max-width: 640px) {
+      .page { width: 100%; min-height: 100vh; grid-template-columns: 1fr; border-radius: 0; }
+      .left-panel { padding: 36px 24px; }
+      .right-panel { padding: 36px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+  <div class="left-panel">
+    <div class="logo-area">
+      <div class="logo-icon">
+        <i class="ti ti-building-community" aria-hidden="true"></i>
+      </div>
+      <div class="logo-title">One Stop Rental System</div>
+      <div class="logo-sub">한국외국어대학교</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="info-section">
+      <div class="info-title">전화 문의</div>
+      <a class="contact-item" href="tel:02-2173-2134">
+        <i class="ti ti-door" aria-hidden="true"></i>
+        <span class="contact-label">강의실 대관</span>
+        <span class="contact-number">02-2173-2134</span>
+      </a>
+      <a class="contact-item" href="tel:02-2173-2944">
+        <i class="ti ti-alert-circle" aria-hidden="true"></i>
+        <span class="contact-label">시스템 오류</span>
+        <span class="contact-number">02-2173-2944</span>
+      </a>
+      <a class="contact-item" href="tel:02-2173-2152">
+        <i class="ti ti-key" aria-hidden="true"></i>
+        <span class="contact-label">ID / 비밀번호</span>
+        <span class="contact-number">02-2173-2152</span>
+      </a>
+    </div>
+
+    <div class="provider-tag">정보지원처 정보통신팀</div>
+  </div>
+
+  <div class="right-panel">
+    <div class="form-wrap">
+      <div class="form-heading">로그인</div>
+      <div class="form-sub">학번 또는 사번으로 로그인하세요</div>
+
+      <div class="error-msg" id="errorMsg">
+        <i class="ti ti-alert-circle" aria-hidden="true"></i>
+        <span id="errorText"></span>
+      </div>
+      <div class="success-msg" id="successMsg">
+        <i class="ti ti-circle-check" aria-hidden="true"></i>
+        <span id="successText"></span>
+      </div>
+
+      <div class="input-group">
+        <label for="username">아이디 (학번/사번)</label>
+        <input type="text" id="username" placeholder="Username" />
+      </div>
+      <div class="input-group">
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" placeholder="Password" />
+      </div>
+
+      <div class="privacy-box">
+        <p>1. 로그인을 통한 개인정보(학과, 학번/사번, 이름, 전화번호)는 시설 예약 확인을 위해 사용됩니다.</p>
+        <p>2. 위의 개인정보는 시스템 유지를 위해 운용기간 동안 유지됩니다.</p>
+        <p>3. 개인정보 활용을 거부할 경우 시스템을 사용하실 수 없습니다.</p>
+      </div>
+
+      <div class="agree-row">
+        <input type="checkbox" id="agree" />
+        <label for="agree">개인정보 수집에 동의합니다.</label>
+      </div>
+
+      <button class="btn-login" id="loginBtn" onclick="handleLogin()">
+        <div class="spinner" id="spinner"></div>
+        <span id="btnText">Sign in!</span>
+      </button>
+
+      <div class="find-links">
+        <a href="#">비밀번호 찾기</a>
+        <div class="find-sep"></div>
+        <a href="#">졸업생 ID 찾기</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ✅ 백엔드 API 주소 (서버 주소에 맞게 수정)
+  const API_BASE = 'http://localhost:3001/api';
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    document.getElementById('errorText').textContent = msg;
+    el.style.display = 'flex';
+    document.getElementById('successMsg').style.display = 'none';
+  }
+
+  function showSuccess(msg) {
+    const el = document.getElementById('successMsg');
+    document.getElementById('successText').textContent = msg;
+    el.style.display = 'flex';
+    document.getElementById('errorMsg').style.display = 'none';
+  }
+
+  function setLoading(isLoading) {
+    const btn = document.getElementById('loginBtn');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btnText');
+    const inputs = document.querySelectorAll('input');
+
+    btn.disabled = isLoading;
+    spinner.style.display = isLoading ? 'block' : 'none';
+    btnText.textContent = isLoading ? '로그인 중...' : 'Sign in!';
+    inputs.forEach(input => input.disabled = isLoading);
+  }
+
+  async function handleLogin() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const agreed = document.getElementById('agree').checked;
+
+    document.getElementById('errorMsg').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'none';
+
+    if (!username || !password) {
+      showError('아이디와 비밀번호를 입력해주세요.');
+      return;
+    }
+    if (!agreed) {
+      showError('개인정보 수집에 동의해주세요.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        showError(data.message || '로그인에 실패했습니다.');
+        return;
+      }
+
+      // ✅ JWT 토큰 저장
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      showSuccess(`${data.user.name}님, 환영합니다!`);
+
+      // ✅ 로그인 후 이동할 페이지로 변경
+      setTimeout(() => {
+        window.location.href = '/dashboard.html';
+      }, 1000);
+
+    } catch (err) {
+      showError('서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
+      console.error('Login error:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Enter 키 로그인
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleLogin();
+  });
+
+  // 이미 로그인된 경우 토큰 검증
+  window.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/auth/me`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (res.ok) {
+        window.location.href = '/dashboard.html';
+      } else {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
+    } catch {}
+  });
+</script>
+
+</body>
+</html>
